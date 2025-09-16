@@ -15,9 +15,9 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 5000;
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Map languages to Judge0 IDs
+
 const LANGUAGE_MAP = {
-  javascript: 63, // Node.js
+  javascript: 63, 
   java: 62,
   dotnet: 51,
 };
@@ -30,118 +30,12 @@ function commentStyleFor(tech) {
   return { start: "/*", end: "*/" }; // JS/Java/C# etc.
 }
 
-// -------------------- QUESTIONS --------------------
-// app.post("/questions", async (req, res) => {
-//   try {
-//     const { tech } = req.body;
-//     if (!tech) return res.status(400).json({ error: "tech required" });
-
-//     const localExamples = examples[tech.toLowerCase()] || [];
-
-//     const prompt = `
-// You are an expert interview question generator for ${tech}.
-// Generate questions in 4 categories:
-
-// 1. Performance Improvement
-// 2. Code Refactoring
-// 3. Fixing Unit Test Cases
-// 4. Problem Statements
-
-// For Problem Statements, follow the style of these examples:
-// ${localExamples.join("\n")}
-
-// Return output as valid JSON in this exact format:
-// {
-//   "performance": [ "Q1", "Q2", ... ],
-//   "refactor": [ "Q1", "Q2", ... ],
-//   "unitTests": [ "Q1", "Q2", ... ],
-//   "problems": [ "Q1", "Q2", ... ]
-// }
-// Each array should contain exactly 10 questions.
-// IMPORTANT: Return only JSON, no explanations, no markdown.
-// `;
-
-//     const completion = await openai.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages: [{ role: "user", content: prompt }],
-//       max_tokens: 1500,
-//     });
-
-//     let raw = completion.choices[0].message.content.trim();
-//     let parsed;
-//     try {
-//       parsed = JSON.parse(raw);
-//     } catch {
-//       raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-//       parsed = JSON.parse(raw);
-//     }
-
-//     res.json(parsed);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Failed to generate questions" });
-//   }
-// });
-// app.post("/questions", async (req, res) => {
-//   try {
-//     const { tech } = req.body;
-//     if (!tech) return res.status(400).json({ error: "tech required" });
-
-//     const localExamples = examples[tech.toLowerCase()] || [];
-
-//     const prompt = `
-// You are an expert interview question generator for ${tech}.
-// Generate a total of 10 interview questions, split into 4 categories:
-
-// 1. Performance Improvement
-// 2. Code Refactoring
-// 3. Fixing Unit Test Cases
-// 4. Problem Statements
-
-// For Problem Statements, follow the style of these examples:
-// ${localExamples.join("\n")}
-
-// Return output as valid JSON in this exact format:
-// {
-//   "performance": [ "Q1", "Q2" ],
-//   "refactor": [ "Q3", "Q4" ],
-//   "unitTests": [ "Q5", "Q6" ],
-//   "problems": [ "Q7", "Q8", "Q9", "Q10" ]
-// }
-
-// ⚠️ The total must be exactly 10 questions across all categories.
-// Do not include explanations. Only return valid JSON.
-// `;
-
-//     const completion = await openai.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages: [{ role: "user", content: prompt }],
-//       max_tokens: 1000,
-//     });
-
-//     let raw = completion.choices[0].message.content.trim();
-//     let parsed;
-//     try {
-//       parsed = JSON.parse(raw);
-//     } catch {
-//       raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-//       parsed = JSON.parse(raw);
-//     }
-
-//     res.json(parsed);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Failed to generate questions" });
-//   }
-// });
 app.post("/questions", async (req, res) => {
   try {
     const { tech } = req.body;
     if (!tech) return res.status(400).json({ error: "tech required" });
 
     const localExamples = examples[tech.toLowerCase()] || [];
-
-    //console.log(`localExamples for ${tech}: `,localExamples)
 
     const prompt = `
 You are an expert ${tech} interview question generator.
@@ -338,7 +232,5 @@ app.post("/chat", async (req, res) => {
     res.status(500).json({ error: "Failed to get chat response" });
   }
 });
-
-
 
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
